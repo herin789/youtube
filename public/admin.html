@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Upload Video</title>
+    <link rel="icon" href="youtube.png" type="image/icon type">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <h2>Upload a New Video</h2>
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+            <label>Title</label>
+            <input type="text" name="title" required>
+
+            <label>Description</label>
+            <textarea name="description" required></textarea>
+
+            <label>Video File</label>
+            <input type="file" name="video" accept="video/*" required>
+
+            <label>Thumbnail Image</label>
+            <input type="file" name="thumbnail" accept="image/*" required>
+
+            <button type="submit">Upload Video</button>
+        </form>
+    </div>
+</body>
+</html>

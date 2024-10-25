@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Clone</title>
+    <link rel="icon" href="youtube.png" type="image/icon type">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <h1>YouTube Clone</h1>
+        <input type="text" placeholder="Search...">
+        <button>Search</button>
+    </header>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="#">Home</a>
+        <a href="#">Trending</a>
+        <a href="#">Subscriptions</a>
+        <a href="#">Library</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h2>Recommended Videos</h2>
+        <div id="video-list" class="video-list"></div>
+    </div>
+
+    <!-- Video Modal -->
+    <div id="videoModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <video id="videoPlayer" controls>
+                <source id="videoSource" src="" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div id="videoInfo">
+                <h3 id="videoTitle"></h3>
+                <p id="videoDescription"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Fetch videos from the server and display them
+        fetch('/videos')
+            .then(response => response.json())
+            .then(videos => {
+                const videoList = document.getElementById('video-list');
+                videos.forEach(video => {
+                    const videoCard = document.createElement('div');
+                    videoCard.className = 'video-card';
+                    videoCard.innerHTML = `
+                        <img src="${video.thumbnail_url}" alt="Thumbnail" class="thumbnail">
+                        <div class="video-details">
+                            <div class="video-title">${video.title}</div>
+                            <div class="uploaded-time">${new Date(video.uploaded_at).toLocaleDateString()}</div>
+                        </div>
+                    `;
+                    videoCard.addEventListener('click', () => openModal(video));
+                    videoList.appendChild(videoCard);
+                });
+            });
+
+        // Open the modal to play video
+        function openModal(video) {
+            document.getElementById('videoSource').src = video.video_url;
+            document.getElementById('videoTitle').innerText = video.title;
+            document.getElementById('videoDescription').innerText = video.description;
+            document.getElementById('videoModal').style.display = 'block';
+            document.getElementById('videoPlayer').load();
+            document.getElementById('videoPlayer').play();
+        }
+
+        // Close the modal
+        document.getElementById('closeModal').onclick = function() {
+            document.getElementById('videoModal').style.display = 'none';
+            document.getElementById('videoPlayer').pause();
+        };
+
+        // Close modal when clicking outside content
+        window.onclick = function(event) {
+            const modal = document.getElementById('videoModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+                document.getElementById('videoPlayer').pause();
+            }
+        };
+    </script>
+</body>
+</html>
